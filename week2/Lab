@@ -1,0 +1,33 @@
+Part A – Create Tables
+CREATE TABLE Animal_Types (
+    id INTEGER PRIMARY KEY,
+    species TEXT,
+    habitat TEXT,
+    diet TEXT
+);
+
+CREATE TABLE Animals (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    species_id INTEGER,
+    age INTEGER
+);
+
+Part B – Insert Data
+INSERT INTO Animal_Types (id, species, habitat, diet) VALUES
+(1, 'Lion', 'Savanna', 'Carnivore'),
+(2, 'Giraffe', 'Savanna', 'Herbivore'),
+(3, 'Penguin', 'Antarctic', 'Carnivore');
+
+INSERT INTO Animals (id, name, species_id, age) VALUES
+(1, 'Alex', 1, 5),
+(2, 'Melman', 2, 7),
+(3, 'Skipper', 3, 3);
+
+Part C – Experiment with Errors
+INSERT INTO Animals (id, name, species_id, age) VALUES
+(4 'Zoe', 1, 2);
+
+
+
+
