@@ -1,0 +1,22 @@
+select
+current_timestamp,
+current_database(),
+version(),
+'Hello, SQL';
+
+
+How to create a database in PostgreSQL.
+•	To create a database, you need just one line of SQL.
+•	 Launch pgAdmin
+•	Click postgres once to highlight it
+•	Open the query tool
+•	 Enter the code 
+•	 Click execute
+             How to create a table
+•	Open the pgAdmin Query Tool 
+•	Copy the Create Table script into the SQL editor
+•	Execute the script
+•	Expand tables to view new table
+      Why semicolons are important in SQL
+•	They are used for statement separation and execution
+      At least two examples of data types you might use in a table. Text and integer
