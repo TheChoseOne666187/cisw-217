@@ -1,0 +1,31 @@
+CREATE TABLE My_Favorite_Football_Teams (
+    id SERIAL PRIMARY KEY,
+    team_name TEXT NOT NULL,
+    city TEXT,
+    championships_won INTEGER,
+    founded_date DATE
+);
+
+
+
+INSERT INTO My_Favorite_Football_Teams (team_name, city, championships_won, founded_date)
+VALUES
+('Denver Broncos', 'Denver', 3, '8-14-1960'),
+('Chicago Bears', 'Chicago', 1, '9-17-1919'),
+('Indianapolis Colts', 'Indianapolis', 2, '1-01-1953'),
+('Pittsburgh Steelers', 'Pittsburgh', 6, '7-08-1933');
+
+1	"Denver Broncos"	"Denver"	3	"1960-08-14"
+2	"Chicago Bears"	"Chicago"	1	"1919-09-17"
+3	"Indianapolis Colts"	"Indianapolis"	2	"1953-01-01"
+4	"Pittsburgh Steelers"	"Pittsburgh"	6	"1933-07-08"
+
+INSERT INTO My_Favorite_Football_Teams (team_name, city, championships_won, founded_date)
+VALUES
+('New Orleans Saints' 'New Orleans', 1, '1966-11-01');
+ERROR:  syntax error at or near "'New Orleans'"
+LINE 3: ('New Orleans Saints' 'New Orleans', 1, '1966-11-01');
+                              ^ 
+
+SQL state: 42601
+Character: 120
