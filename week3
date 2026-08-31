@@ -81,6 +81,38 @@ WHERE title LIKE 'm%';
 SELECT title, genre
 FROM games
 WHERE title ILIKE 'm%';
+-- Task 16
+SELECT title, platform, rating
+FROM games
+WHERE platform = 'PC'
+AND rating > 9.0;
+sql
+-- Task 17
+SELECT title, genre
+FROM games
+WHERE genre = 'RPG'
+OR genre = 'Fighting';
+sql
+-- Task 18
+SELECT title, platform, release_year
+FROM games
+WHERE platform = 'PC'
+AND (release_year < 2017 OR release_year > 2022);
+sql
+-- Task 19
+SELECT title, genre, platform, rating
+FROM games
+WHERE rating >= 8.8
+ORDER BY platform ASC, rating DESC;
+sql
+-- Task 20
+-- Question: Which Action or Adventure games released in 2020 or later have a rating of 8.5 or higher?
+SELECT title, genre, platform, release_year, rating
+FROM games
+WHERE (genre = 'Action' OR genre = 'Adventure')
+AND release_year >= 2020
+AND rating >= 8.5
+ORDER BY rating DESC;
 
 
 
