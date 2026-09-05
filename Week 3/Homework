@@ -1,0 +1,70 @@
+ CREATE TABLE books (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(100),
+    author VARCHAR(100),
+    genre VARCHAR(50),
+    year_published INT
+);
+
+INSERT INTO books (title, author, genre, year_published)
+VALUES
+    ('Neuromancer', 'William Gibson', 'Cyberpunk', 1984),
+    ('Snow Crash', 'Neal Stephenson', 'Cyberpunk', 1992),
+    ('The Third Eye', 'Sophia Stewart', 'Science Fiction', 1981),
+    ('Dune', 'Frank Herbert', 'Science Fiction', 1965),
+    ('Do Androids Dream of Electric Sheep?', 'Philip K. Dick', 'Science Fiction', 1968);
+
+
+
+-- Query 1:
+-- Select all columns
+SELECT * FROM books;
+ 
+ 
+-- Query 2: 
+-- Select only specific columns (title and author)
+SELECT title, author FROM books;
+ 
+ 
+-- Query 3:
+-- Use DISTINCT to show the unique genres in the table
+SELECT DISTINCT genre FROM books;
+ 
+ 
+-- Query 4:
+-- WHERE filter - books published after the year 1980
+SELECT title, year_published
+FROM books
+WHERE year_published > 1980;
+ 
+ 
+-- Query 5: 
+-- WHERE filter - books in the Cyberpunk genre
+SELECT title, author, genre
+FROM books
+WHERE genre = 'Cyberpunk';
+ 
+ 
+-- Query 6: 
+-- Sort results using ORDER BY (newest to oldest)
+SELECT title, year_published
+FROM books
+ORDER BY year_published DESC;
+ 
+ 
+-- Query 7: 
+-- Combine WHERE and ORDER BY
+-- Show Science Fiction genre books, sorted from oldest to newest
+SELECT title, author, year_published
+FROM books
+WHERE genre = 'Science Fiction'
+ORDER BY year_published ASC;
+ 
+ 
+-- Query 8:
+-- Uses AND / OR / LIKE / BETWEEN
+-- Find books published between 1960 and 1990 whose author's name contains "Gibson" or "Herbert"
+SELECT title, author, year_published
+FROM books
+WHERE year_published BETWEEN 1960 AND 1990
+  AND (author LIKE '%Gibson%' OR author LIKE '%Herbert%');
