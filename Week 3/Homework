@@ -68,3 +68,18 @@ SELECT title, author, year_published
 FROM books
 WHERE year_published BETWEEN 1960 AND 1990
   AND (author LIKE '%Gibson%' OR author LIKE '%Herbert%');
+
+-- =============================================
+-- Chapter 4 Quick Skim
+-- =============================================
+
+-- New Concept:
+-- I learned that...
+json Stores an exact copy of the JSON text
+jsonb Stores the JSON text in a binary format
+
+-- Question:
+-- I am still wondering...
+-- I was just finishing up reading about CAST Notation, haven't gotten a chance to try it. Does this work on all columns?
+
+
