@@ -1,1 +1,82 @@
 
+
+
+
+-- PART 1: Create Table
+
+CREATE TABLE Cars (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    Make varchar(100),
+    Model varchar(100),
+    Year integer CHECK (Year BETWEEN 2000 AND 2026)
+);
+
+INSERT INTO Cars (Make, Model, Year) VALUES
+('Toyota', 'Camry', 2022),
+('Honda', 'Civic', 2020),
+('Ford', 'Mustang', 2024),
+('Tesla', 'Model 3', 2023),
+('Subaru', 'Outback', 2021);
+
+
+
+-- PART 2: Add New Data Types (4 new columns)
+
+ALTER TABLE Cars ADD COLUMN description text;
+ALTER TABLE Cars ADD COLUMN price numeric(10,2);
+ALTER TABLE Cars ADD COLUMN is_available boolean;
+ALTER TABLE Cars ADD COLUMN date_added timestamp with time zone;
+
+
+-- PART 3: Update the Records (3+ UPDATE statements)
+
+UPDATE Cars
+SET description = 'Reliable midsize sedan with great fuel economy',
+    price = 24999.99,
+    is_available = TRUE,
+    date_added = '2024-01-15 10:00:00-07'
+WHERE Make = 'Toyota';
+
+UPDATE Cars
+SET description = 'All-electric sedan with autopilot features',
+    price = 41999.00,
+    is_available = TRUE,
+    date_added = '2024-03-22 14:30:00-07'
+WHERE Make = 'Tesla';
+
+UPDATE Cars
+SET description = 'Classic American muscle car',
+    price = 35999.50,
+    is_available = FALSE,
+    date_added = '2023-11-05 09:15:00-07'
+WHERE Make = 'Ford';
+
+
+
+-- PART 4: Rename a Column
+
+ALTER TABLE Cars
+RENAME COLUMN Year TO model_year;
+
+
+-- PART 5: Queries
+
+
+-- 1. SELECT *
+SELECT * FROM Cars;
+
+-- 2. Specific columns
+SELECT Make, Model, price FROM Cars;
+
+-- 3. WHERE condition
+SELECT Make, Model, model_year FROM Cars WHERE model_year > 2021;
+
+-- 4. ORDER BY
+SELECT Make, Model, price FROM Cars ORDER BY price DESC;
+
+-- 5. Uses one of the new data types (boolean) in condition
+SELECT Make, Model, is_available FROM Cars WHERE is_available = TRUE;
+
+-- Which new data type did you find the most useful? I found the boolean most useful.
+-- Why did you choose the data types you used? They added more precise information the cars Table and columns.
+-- What is the difference between ALTER TABLE and UPDATE? Alter Table changes the structure and Update changes the data.
