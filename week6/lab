@@ -1,1 +1,36 @@
+CREATE TABLE product (
+    id            INTEGER PRIMARY KEY,   -- CSV "Index"
+    product_name  VARCHAR(100) NOT NULL, -- CSV "Name"
+    description   TEXT,
+    brand         VARCHAR(100),
+    category      VARCHAR(100),
+    price         NUMERIC(10,2),         -- money: use NUMERIC, not FLOAT
+    currency      CHAR(3),               -- e.g. 'USD'
+    stock         INTEGER,
+    ean           VARCHAR(13),           -- barcode: keep as text so nothing gets lost
+    color         VARCHAR(50),
+    size          VARCHAR(50),
+    availability  VARCHAR(50),
+    internal_id   INTEGER
+);
 
+COPY product (id, product_name, description, brand, category, price, currency,
+              stock, ean, color, size, availability, internal_id)
+FROM '/path/to/products-100.csv'
+WITH (FORMAT csv, HEADER true);
+
+SELECT * FROM product;
+
+SELECT AVG(price) AS avg_price
+FROM product;
+
+SELECT MAX(price) AS highest_price,
+       MIN(price) AS lowest_price
+FROM product;
+
+SELECT COUNT(*)              AS total_products,
+       ROUND(AVG(price), 2)  AS avg_price,
+       MAX(price)            AS highest_price,
+       MIN(price)            AS lowest_price,
+       SUM(price * stock)    AS total_inventory_value
+FROM product;
