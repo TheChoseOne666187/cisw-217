@@ -1,1 +1,37 @@
+CREATE TABLE PracticeMathDB (
+    id INTEGER PRIMARY KEY,
+    Page_ID VARCHAR(100),
+    URL TEXT,
+    Page_Title TEXT,
+    Page_Text TEXT,
+    Extraction_Task TEXT
+	);
 
+1. "Total Inventory Value" equivalent:
+Total character count of all extracted page text (measure of data volume)
+SELECT SUM(LENGTH(Page_Text)) AS total_text_characters
+FROM PracticeMathDB;
+
+-- 2. "Average Price per Category" equivalent:
+-- Average Page_Text length grouped by Extraction_Task (your 'category')
+SELECT Extraction_Task, AVG(LENGTH(Page_Text)) AS avg_text_length
+FROM PracticeMathDB
+GROUP BY Extraction_Task;
+
+-- 3. "Price > 500" equivalent:
+-- Pages where the extracted text is very long (> 500 chars)
+SELECT Page_ID, URL, LENGTH(Page_Text) AS text_length
+FROM PracticeMathDB
+WHERE LENGTH(Page_Text) > 500;
+
+-- 4. "Count specific Category" equivalent:
+-- Count pages for a specific Extraction_Task (change 'PRICE_EXTRACTION' to your actual task name)
+SELECT COUNT(*) AS task_count
+FROM PracticeMathDB
+WHERE Extraction_Task = 'PRICE_EXTRACTION'; -- Replace with a value that exists in your data
+
+-- 5. "ORDER BY Price" equivalent:
+-- Order pages by text length (shortest to longest)
+SELECT Page_ID, URL, LENGTH(Page_Text) AS text_length
+FROM PracticeMathDB
+ORDER BY text_length ASC;
