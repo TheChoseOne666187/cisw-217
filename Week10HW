@@ -1,0 +1,56 @@
+create table products("Index" Integer PRIMARY KEY, "Name" varchar(100), Description text, Brand text, Category varchar(67),
+price numeric(10,2), Currency varchar(5), Stock integer, EAN text, Color text, "Size" text, Availability text, Internal_ID integer);
+
+SELECT Currency,
+-- want to find the average price but I want it to be rounded
+ROUND(AVG(price),2)as avg_price
+FROM products
+group by category
+order by avg_price DESC;
+
+SELECT * FROM public.products
+ORDER BY "Index" ASC 
+
+SELECT Category,
+-- want to find the average price but I want it to be rounded
+ROUND(AVG(price),2) as avg_price
+FROM products
+group by category
+order by avg_price DESC;
+
+SELECT
+    Category,
+    CEIL(ROUND(AVG(Price), 2)) AS avg_price
+FROM products
+GROUP BY Category
+ORDER BY avg_price DESC;
+
+SELECT
+    MAX(Price) AS highest_price,
+    MIN(Price) AS lowest_price
+FROM products;
+
+SELECT
+    Category,
+    Price,
+    FLOOR(Price) AS price_floor
+FROM products;
+
+SELECT UPPER
+(Category) AS category_upper,
+    Price
+FROM products;
+
+CREATE VIEW category_overview AS
+SELECT
+    Category,
+    ROUND(AVG(Price), 2) AS avg_price,
+    SUM(Stock)           AS total_stock
+FROM products
+GROUP BY Category
+HAVING AVG(Price) > 50;
+
+SELECT * FROM category_overview;
+
+SELECT * FROM category_overview
+ORDER BY avg_price DESC;
