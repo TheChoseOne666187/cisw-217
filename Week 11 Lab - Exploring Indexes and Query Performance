@@ -1,3 +1,5 @@
+--SELECT * FROM products_raw
+
 -- EXPLAIN ANALYZE
 -- Select * from products
 
