@@ -1,0 +1,19 @@
+-- EXPLAIN ANALYZE
+-- Select * from products
+
+-- EXPLAIN ANALYZE
+-- Select * from products
+-- where category='Skincare';
+
+-- How many records are in your table? 100
+
+-- Why might the number of records affect query performance? The dataset might have more in it
+
+
+-- Did PostgreSQL use a sequential scan (Seq Scan)?
+-- yes
+-- How many records were returned?
+
+-- What was the execution time?
+
+0.33
