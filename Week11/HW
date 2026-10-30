@@ -1,0 +1,30 @@
+-- create table products_big("Index" Integer PRIMARY KEY, "Name" varchar(100), Description text, Brand text, Category varchar(67),
+-- price numeric(10,2), Currency varchar(5), Stock integer, EAN text, Color text, "Size" text, Availability text, Internal_ID integer);
+
+-- SELECT * FROM public.products
+-- ORDER BY "Index" ASC
+
+-- SELECT COUNT (*) FROM products_big; -- expect ~100,000
+-- SELECT * FROM products_big LIMIT 5; -- spot-check columns
+
+-- EXPLAIN ANALYZE SELECT * FROM products_big WHERE category = 'Skincare';
+
+-- CREATE INDEX idx_big_category ON products_big (category);
+-- ANALYZE products_big;
+-- EXPLAIN ANALYZE SELECT * FROM products_big WHERE category = 'Skincare';
+
+-- CREATE INDEX idx_big_cat_price ON products_big (category, price);
+-- ANALYZE products_big;
+-- EXPLAIN ANALYZE
+-- SELECT * FROM products_big
+-- WHERE category = 'Skincare' AND price < 50;
+
+-- SET enable_seqscan=OFF;
+-- Explain analyze 
+-- select*from products_big
+-- where category='Skincare';
+
+-- SET enable_seqscan=ON;
+-- Explain analyze 
+-- select*from products_big
+-- where category='Skincare';
