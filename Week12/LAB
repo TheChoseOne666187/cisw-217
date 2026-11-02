@@ -1,33 +1,31 @@
--- CREATE TABLE Students(
--- id serial Primary Key,
--- name text,
--- email text,
--- date_enrolled int);
+CREATE TABLE Students(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,   -- "serial" is Postgres-only
+  name TEXT,
+  email TEXT,
+  city TEXT,                              -- your INSERT used city, but the table had no such column
+  date_enrolled TEXT                      -- was int; dates read better as text like '2024-01-15'
+);
 
--- CREATE TABLE Courses(
--- id serial Primary Key,
--- students_id int,
--- product text,
--- total numeric(10,2),
--- FOREIGN KEY(courses_id) REFERENCES students(students_id)
--- )
+CREATE TABLE Courses(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id INT,                         -- was "students_id", but the INSERT used "customers_id"
+  title TEXT,                             -- was "product" (Laptop, Mouse), which isn't a course
+  tuition NUMERIC(10,2),                  -- was "total"
+  FOREIGN KEY(student_id) REFERENCES Students(id)   -- the old one pointed at nonexistent columns
+);
 
--- INSERT INTO students("name",email,city)
--- VALUES
--- ('ALice', 'alice@email.com', 'Boise'),
--- ('Brian', 'brian@email.com', 'Twin Falls'),
--- ('Carmen', 'carmen@email.com', 'Jerome');
+INSERT INTO Students(name, email, city, date_enrolled) VALUES
+('Amy','amy@email.com','Boise','2024-01-15'),
+('Brad','brad@email.com','Twin Falls','2024-02-03'),
+('Candy','candy@email.com','Jerome','2024-02-20'),
+('Donna','donna@email.com','Nampa','2024-03-11'),
+('Earl','earl@email.com','Meridian','2024-04-02'),
+('Faith','faith@email.com','Pocatello','2024-05-09');
 
--- INSERT into Courses(customers_id, product, total)
--- VALUES
--- (1, 'Laptop', 999.99),
--- (2, 'Mouse', 25.50),
--- (3, 'Headphones', 89.99),
--- (4, 'Monitor', 199.99),
--- (5, 'Lorem Ipsem', 888.88);
+INSERT INTO Courses(student_id, title, tuition) VALUES
+(1,'Intro to Databases',999.99), (2,'Web Design',25.50), (3,'Python Basics',89.99),
+(4,'Data Analysis',199.99), (5,'Statistics',888.88);
 
--- SELECT Students.date.enrolled,
--- courses.students_id,
--- courses.position FROM courses
--- JOIN students
--- ON courses.students_id = students_id;
+SELECT Students.name, Students.date_enrolled, Courses.title, Courses.tuition
+FROM Courses
+JOIN Students ON Courses.student_id = Students.id;
