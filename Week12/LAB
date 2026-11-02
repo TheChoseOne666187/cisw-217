@@ -1,0 +1,33 @@
+-- CREATE TABLE Students(
+-- id serial Primary Key,
+-- name text,
+-- email text,
+-- date_enrolled int);
+
+-- CREATE TABLE Courses(
+-- id serial Primary Key,
+-- students_id int,
+-- product text,
+-- total numeric(10,2),
+-- FOREIGN KEY(courses_id) REFERENCES students(students_id)
+-- )
+
+-- INSERT INTO students("name",email,city)
+-- VALUES
+-- ('ALice', 'alice@email.com', 'Boise'),
+-- ('Brian', 'brian@email.com', 'Twin Falls'),
+-- ('Carmen', 'carmen@email.com', 'Jerome');
+
+-- INSERT into Courses(customers_id, product, total)
+-- VALUES
+-- (1, 'Laptop', 999.99),
+-- (2, 'Mouse', 25.50),
+-- (3, 'Headphones', 89.99),
+-- (4, 'Monitor', 199.99),
+-- (5, 'Lorem Ipsem', 888.88);
+
+-- SELECT Students.date.enrolled,
+-- courses.students_id,
+-- courses.position FROM courses
+-- JOIN students
+-- ON courses.students_id = students_id;
