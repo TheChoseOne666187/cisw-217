@@ -1,17 +1,17 @@
 CREATE TABLE Students(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,   -- "serial" is Postgres-only
+  id INTEGER PRIMARY KEY ,   
   name TEXT,
   email TEXT,
-  city TEXT,                              -- your INSERT used city, but the table had no such column
-  date_enrolled TEXT                      -- was int; dates read better as text like '2024-01-15'
+  city TEXT,                             
+  date_enrolled TEXT                     
 );
 
 CREATE TABLE Courses(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  student_id INT,                         -- was "students_id", but the INSERT used "customers_id"
-  title TEXT,                             -- was "product" (Laptop, Mouse), which isn't a course
-  tuition NUMERIC(10,2),                  -- was "total"
-  FOREIGN KEY(student_id) REFERENCES Students(id)   -- the old one pointed at nonexistent columns
+  id INTEGER PRIMARY KEY,
+  student_id INT,                       
+  title TEXT,                             
+  tuition NUMERIC(10,2),                  
+  FOREIGN KEY(student_id) REFERENCES Students(id) 
 );
 
 INSERT INTO Students(name, email, city, date_enrolled) VALUES
