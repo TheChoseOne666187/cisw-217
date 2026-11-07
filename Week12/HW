@@ -1,0 +1,19 @@
+-- 1. Create the Parent:
+CREATE TABLE PRODUCTS (
+    product_id INTEGER PRIMARY KEY,
+    vendor_name TEXT,
+    product_name TEXT,
+    source_catalog TEXT
+);
+
+
+-- 2. Create the Child:
+CREATE TABLE KEV (
+    cve_id TEXT PRIMARY KEY,
+    product_id INTEGER,
+    vulnerability_name TEXT,
+    date_added DATE,
+    due_date DATE,
+    FOREIGN KEY (product_id) REFERENCES PRODUCTS(product_id)
+);
+
