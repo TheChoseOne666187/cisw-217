@@ -1,0 +1,55 @@
+
+ -- 3. HOST_SYSTEMS (Enterprise Asset Inventory)
+CREATE TABLE HOST_SYSTEMS (
+        system_id INTEGER PRIMARY KEY,
+        hostname TEXT UNIQUE,
+        ip_address TEXT,
+        operating_platform TEXT,
+        environment TEXT
+    );
+	
+-- 4.  REMEDIATION_GUIDES (Mitigation & Patching Playbooks)
+	 CREATE TABLE REMEDIATION_GUIDES (
+        guide_id INTEGER PRIMARY KEY,
+        advisory_id INTEGER,
+        mitigation_type TEXT,
+        action_summary TEXT,
+        advisory_url TEXT,
+        FOREIGN KEY (advisory_id) REFERENCES
+        SECURITY_ADVISORIES(advisory_id)
+    );
+	
+-- 5.  SECURITY_ADVISORIES (Formal CISA Advisories) 
+	 CREATE TABLE SECURITY_ADVISORIES (
+        advisory_id INTEGER PRIMARY KEY,
+        cve_id TEXT UNIQUE,
+        category_id INTEGER,
+        advisory_title TEXT,
+        publish_date DATE,
+        compliance_due_date DATE,
+        severity_level TEXT,
+        FOREIGN KEY (category_id) REFERENCES
+        VULNERABILITY_CATEGORIES(category_id)
+    );
+
+-- 6.  VULNERABILITY_CATEGORIES (CWE Weakness Taxonomy)
+	  CREATE TABLE VULNERABILITY_CATEGORIES (
+        category_id INTEGER PRIMARY KEY,
+        cwe_code TEXT UNIQUE,
+        category_name TEXT,
+        owasp_category TEXT
+    );
+	
+--7.VULNERABILITY_DETECTIONS (Active Scan Detections)
+	  CREATE TABLE VULNERABILITY_DETECTIONS (
+        detection_id INTEGER PRIMARY KEY,
+        advisory_id INTEGER,
+        system_id INTEGER,
+        scan_date DATE,
+        scanner_engine TEXT,
+        ticket_status TEXT,
+        FOREIGN KEY (advisory_id) REFERENCES
+        SECURITY_ADVISORIES(advisory_id),
+        FOREIGN KEY (system_id) REFERENCES
+        HOST_SYSTEMS(system_id)
+    );
