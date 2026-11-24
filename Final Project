@@ -1,0 +1,155 @@
+-- 1. PRODUCTS (parent of KEV)
+-- CREATE TABLE PRODUCTS (
+--     product_id    INTEGER PRIMARY KEY,
+--     vendor_name   TEXT,
+--     product_name  TEXT,
+--     source_catalog TEXT
+-- );
+
+-- 2. KEV (child of PRODUCTS)
+-- CREATE TABLE KEV (
+--     cve_id             TEXT PRIMARY KEY,
+--     product_id         INTEGER,
+--     vulnerability_name TEXT,
+--     date_added         DATE,
+--     due_date           DATE,
+--     FOREIGN KEY (product_id) REFERENCES PRODUCTS(product_id)
+-- );
+
+-- 3. HOST_SYSTEMS (Enterprise Asset Inventory)
+-- CREATE TABLE HOST_SYSTEMS (
+--     system_id         INTEGER PRIMARY KEY,
+--     hostname          TEXT UNIQUE,
+--     ip_address        TEXT,
+--     operating_platform TEXT,
+--     environment       TEXT
+-- );
+
+-- 4. VULNERABILITY_CATEGORIES (CWE taxonomy; parent of SECURITY_ADVISORIES)
+-- CREATE TABLE VULNERABILITY_CATEGORIES (
+--     category_id  INTEGER PRIMARY KEY,
+--     cwe_code     TEXT UNIQUE,
+--     category_name TEXT,
+--     owasp_category TEXT
+-- );
+
+-- 5. SECURITY_ADVISORIES (child of VULNERABILITY_CATEGORIES; parent of REMEDIATION_GUIDES & DETECTIONS)
+-- CREATE TABLE SECURITY_ADVISORIES (
+--     advisory_id          INTEGER PRIMARY KEY,
+--     cve_id               TEXT UNIQUE,
+--     category_id          INTEGER,
+--     advisory_title       TEXT,
+--     publish_date         DATE,
+--     compliance_due_date  DATE,
+--     severity_level       TEXT,
+--     FOREIGN KEY (category_id) REFERENCES VULNERABILITY_CATEGORIES(category_id)
+-- );
+
+-- 6. REMEDIATION_GUIDES (child of SECURITY_ADVISORIES)
+-- CREATE TABLE REMEDIATION_GUIDES (
+--     guide_id        INTEGER PRIMARY KEY,
+--     advisory_id     INTEGER,
+--     mitigation_type TEXT,
+--     action_summary  TEXT,
+--     advisory_url    TEXT,
+--     FOREIGN KEY (advisory_id) REFERENCES SECURITY_ADVISORIES(advisory_id)
+-- );
+
+-- 7. VULNERABILITY_DETECTIONS (child of SECURITY_ADVISORIES and HOST_SYSTEMS)
+-- CREATE TABLE VULNERABILITY_DETECTIONS (
+--     detection_id   INTEGER PRIMARY KEY,
+--     advisory_id    INTEGER,
+--     system_id      INTEGER,
+--     scan_date      DATE,
+--     scanner_engine TEXT,
+--     ticket_status  TEXT,
+--     FOREIGN KEY (advisory_id) REFERENCES SECURITY_ADVISORIES(advisory_id),
+--     FOREIGN KEY (system_id)  REFERENCES HOST_SYSTEMS(system_id)
+-- );
+
+
+-- Query 1: Verify row counts in all 7 tables (10 rows each = 70 total rows)
+-- SELECT '1. PRODUCTS (W12)' AS module_table, COUNT(*) AS total_rows FROM PRODUCTS
+-- UNION ALL
+-- SELECT '2. KEV (W12)', COUNT(*) FROM KEV
+-- UNION ALL
+-- SELECT '3. VULNERABILITY_CATEGORIES (W13)', COUNT(*) FROM VULNERABILITY_CATEGORIES
+-- UNION ALL
+-- SELECT '4. HOST_SYSTEMS (W13)', COUNT(*) FROM HOST_SYSTEMS
+-- UNION ALL
+-- SELECT '5. SECURITY_ADVISORIES (W13)', COUNT(*) FROM SECURITY_ADVISORIES
+-- UNION ALL
+-- SELECT '6. REMEDIATION_GUIDES (W13)', COUNT(*) FROM REMEDIATION_GUIDES
+-- UNION ALL
+-- SELECT '7. VULNERABILITY_DETECTIONS (W13)', COUNT(*) FROM VULNERABILITY_DETECTIONS;
+
+-- Query 2: Multi-table JOIN connecting Week 12 products & KEV with Week 13 advisories & detections
+-- SELECT 
+--     p.vendor_name,
+--     p.product_name,
+--     k.cve_id,
+--     k.vulnerability_name,
+--     vc.cwe_code,
+--     vc.category_name,
+--     rg.action_summary,
+--     hs.hostname,
+--     hs.operating_platform,
+--     vd.scanner_engine,
+--     vd.ticket_status
+-- FROM PRODUCTS p
+-- JOIN KEV k ON p.product_id = k.product_id
+-- JOIN SECURITY_ADVISORIES sa ON k.cve_id = sa.cve_id
+-- JOIN VULNERABILITY_CATEGORIES vc ON sa.category_id = vc.category_id
+-- JOIN REMEDIATION_GUIDES rg ON sa.advisory_id = rg.advisory_id
+-- JOIN VULNERABILITY_DETECTIONS vd ON sa.advisory_id = vd.advisory_id
+-- JOIN HOST_SYSTEMS hs ON vd.system_id = hs.system_id
+-- ORDER BY k.due_date ASC;
+
+-- Query 3: Count of still-active detections (Open or In Progress) grouped by severity and environment
+-- SELECT 
+--     sa.severity_level,
+--     hs.environment,
+--     COUNT(vd.detection_id) AS active_findings,
+--     COUNT(DISTINCT hs.system_id) AS affected_hosts
+-- FROM VULNERABILITY_DETECTIONS vd
+-- JOIN SECURITY_ADVISORIES sa ON vd.advisory_id = sa.advisory_id
+-- JOIN HOST_SYSTEMS hs ON vd.system_id = hs.system_id
+-- WHERE vd.ticket_status IN ('Open', 'In Progress')
+-- GROUP BY sa.severity_level, hs.environment
+-- ORDER BY 
+--     CASE sa.severity_level 
+--         WHEN 'Critical' THEN 1 
+--         WHEN 'High' THEN 2 
+--         ELSE 3 
+--     END,
+--     active_findings DESC;
+
+-- Query 4: Cursor-based pagination for detections ordered by scan_date + detection_id
+-- First page (no cursor):
+-- SELECT 
+--     vd.detection_id,
+--     sa.cve_id,
+--     sa.severity_level,
+--     hs.hostname,
+--     vd.scan_date,
+--     vd.scanner_engine,
+--     vd.ticket_status
+-- FROM VULNERABILITY_DETECTIONS vd
+-- JOIN SECURITY_ADVISORIES sa ON vd.advisory_id = sa.advisory_id
+-- JOIN HOST_SYSTEMS hs ON vd.system_id = hs.system_id
+-- ORDER BY vd.scan_date ASC, vd.detection_id ASC
+-- LIMIT 5;
+
+-- Query 5: Vendor-level remediation dashboard: total KEVs, how many are fully remediated, and average days from publish to due date
+-- SELECT 
+--     p.vendor_name,
+--     COUNT(DISTINCT k.cve_id) AS total_cves,
+--     SUM(CASE WHEN vd.ticket_status = 'Remediated' THEN 1 ELSE 0 END) AS remediated_count,
+--     ROUND(AVG(sa.compliance_due_date - sa.publish_date), 1) AS avg_days_to_due
+-- FROM PRODUCTS p
+-- JOIN KEV k ON p.product_id = k.product_id
+-- JOIN SECURITY_ADVISORIES sa ON k.cve_id = sa.cve_id
+-- LEFT JOIN VULNERABILITY_DETECTIONS vd ON sa.advisory_id = vd.advisory_id
+-- GROUP BY p.vendor_name
+-- ORDER BY total_cves DESC, remediated_count DESC;
+
